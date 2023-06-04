@@ -87,7 +87,17 @@
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "04728c30d3804263a5a5256175021b71"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+                        
+  <script>
+    window.onerror = function() {console.log("oops, an error occered");};
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,14 +105,53 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try{
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }catch (error){
+        throw new Error(error);
+      } finally{
+        console.log("calculation done")
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    errorBtns[0].addEventListener('click', function() {console.log("console log message");});
+    errorBtns[1].addEventListener('click', function() {console.error('This is a console error message.');});
+    errorBtns[2].addEventListener('click', function() {console.count('clicked');});
+    errorBtns[3].addEventListener('click', function() {console.warn('console warn message');});
+    errorBtns[4].addEventListener('click', function() {console.assert(1==2, "1 doesn't equal to 2");});
+    errorBtns[5].addEventListener('click', console.clear);
+    errorBtns[6].addEventListener('click', function() {console.dir([1, 2, 3]);});
+    errorBtns[7].addEventListener('click', function() {console.dirxml([1, 2, 3]);});
+    errorBtns[8].addEventListener('click', function() {console.group('Group');});
+    errorBtns[9].addEventListener('click', function() {console.groupEnd();});
+    errorBtns[10].addEventListener('click', function() {console.table([{ x:10, y: 30 }, { x: 20, y: 25 }]);});
+    errorBtns[11].addEventListener('click', function() {console.time('Timer');});
+    errorBtns[12].addEventListener('click', function() {console.timeEnd('Timer');});
+    errorBtns[13].addEventListener('click', function one() {two();});
+    function two(){three();} 
+    function three(){console.trace();}
+    errorBtns[14].addEventListener('click', function() {button()});
+
+    class globalError extends Error {
+      constructor(message) {
+        super(message); 
+        this.name = "globalError";
+      }
+    }
+    function button(){
+      try{
+        let final = 1 + variable;
+        console.log(variable);
+      }catch(error){
+        throw new globalError(error);
+      }
+    }
   </script>
+  
 </body>
 
 </html>
